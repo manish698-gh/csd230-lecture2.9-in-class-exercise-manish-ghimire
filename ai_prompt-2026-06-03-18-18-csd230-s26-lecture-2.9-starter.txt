@@ -1,0 +1,1460 @@
+CONTEXT FOR AI MODEL
+Generated from: C:\Users\fcarella\IdeaProjects\csd230\s26\lecture-2.9-in-class-exercise\csd230-s26-lecture-2.9-starter
+Timestamp: 2026-06-03-18-18
+
+--- PROJECT STRUCTURE ---
+|-- csd230-s26-lecture-2.9-starter/
+    |-- .files2ignore
+    |-- .gitattributes
+    |-- .gitignore
+    |-- docker-compose.yml
+    |-- documentation/
+        |-- a.mmd
+        |-- bookstore-2026-01-30-142617.png
+        |-- bookstore-2026-01-30-142628.mmd
+        |-- uml1.mmd
+        |-- uml2.mmd
+    |-- HELP.md
+    |-- pom.xml
+    |-- src/
+        |-- main/
+            |-- java/
+                |-- app/
+                    |-- Application.java
+                    |-- config/
+                        |-- WebSecurityConfig.java
+                    |-- controllers/
+                        |-- LoginController.java
+                    |-- entities/
+                        |-- BookEntity.java
+                        |-- CartEntity.java
+                        |-- DiscMagEntity.java
+                        |-- MagazineEntity.java
+                        |-- ProductEntity.java
+                        |-- PublicationEntity.java
+                        |-- SaleableItem.java
+                        |-- TicketEntity.java
+                        |-- UserEntity.java
+                    |-- repositories/
+                        |-- BookRepository.java
+                        |-- CartEntityRepository.java
+                        |-- DiscMagEntityRepository.java
+                        |-- MagazineEntityRepository.java
+                        |-- ProductEntityRepository.java
+                        |-- PublicationEntityRepository.java
+                        |-- TicketEntityRepository.java
+                        |-- UserRepository.java
+                    |-- services/
+                        |-- CustomUserDetailsService.java
+            |-- resources/
+                |-- application-h2.properties
+                |-- application-mysql.properties
+                |-- application.properties
+                |-- static/
+                    |-- index.html
+                |-- templates/
+                    |-- login.html
+        |-- test/
+            |-- java/
+                |-- app/
+                    |-- ApplicationTests.java
+
+--------------------------------------------------
+
+--- FILE: .gitattributes ---
+```
+/mvnw text eol=lf
+*.cmd text eol=crlf
+
+```
+
+--- FILE: .gitignore ---
+```
+HELP.md
+volumes/
+
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+```
+
+--- FILE: docker-compose.yml ---
+```
+services:
+  db:
+    image: mysql:8.0 # You can specify bookstore-2026-01-30.mmd different version if needed
+    environment:
+      MYSQL_ROOT_PASSWORD: itstudies12345 # Replace with bookstore-2026-01-30.mmd strong password
+      MYSQL_DATABASE: bookstore # Replace with your desired database name
+      MYSQL_USER: csd214 # Replace with your desired username
+      MYSQL_PASSWORD: itstudies12345 # Replace with bookstore-2026-01-30.mmd strong password
+    ports:
+      - "3307:3306" # Maps port 3333 on your host to port 3306 in the container
+    volumes:
+      # - db_data:/var/lib/mysql # Persists data to bookstore-2026-01-30.mmd named volume
+      - ./volumes/mysql:/var/lib/mysql # persists data to folder in the current folder
+      # You can also mount bookstore-2026-01-30.mmd custom MySQL configuration file if needed:
+      # - ./my.cnf:/etc/mysql/my.cnf
+    restart: always
+
+volumes:
+  db_data: # Define the named volume
+
+```
+
+--- FILE: documentation/a.mmd ---
+```
+classDiagram
+    direction RL
+    class Clock {
+        -time: Time
+        +setTime(Time t)
+    }
+
+
+    class ClockDisplay {
+        +updateView(Time t)
+    }
+
+
+    class DigitalDisplay {
+        -fontSize: int
+        +updateView(Time t)
+    }
+
+
+    class AnalogDisplay {
+        -handColor: String
+        +updateView(Time t)
+    }
+
+
+    <<interface>> ClockDisplay
+
+
+    Clock *-- ClockDisplay : has 1
+    ClockDisplay <|.. DigitalDisplay : implements
+    ClockDisplay <|.. AnalogDisplay : implements
+```
+
+--- FILE: documentation/bookstore-2026-01-30-142628.mmd ---
+```
+classDiagram
+    SaleableItem <|.. Editable
+    Serializable <|.. Editable
+    Editable <|-- Product
+    Product <|-- Ticket
+    Product <|-- Publication
+    Publication <|-- Book
+    Publication <|-- Magazine
+    Magazine <|-- DiscMag
+
+    Product <-- CashTill
+
+    class SaleableItem {
+        <<interface>>
+        +sellItem()
+        +getPrice() double
+    }
+
+    class Serializable {
+        <<interface>>
+    }
+
+    class Editable {
+        <<abstract>>
+        +edit(Scanner input)*
+        +initialize(Scanner input)*
+        +getInput(Scanner input, String defaultValue) String
+        +getInput(Scanner input, int defaultValue) int
+        +getInput(Scanner input, double defaultValue) double
+        +getInput(Scanner input, boolean defaultValue) boolean
+        +getInput(Scanner input, Date defaultValue) Date
+    }
+
+    class Product {
+        <<abstract>>
+        -String productId
+        +getProductId() String
+        +setProductId(String productId)
+    }
+
+    class Ticket {
+        +String description
+        +double price
+        +sellItem()
+        +getPrice() double
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +toString() String
+    }
+
+    class Publication {
+        <<Abstract>>
+        -String title
+        -double price
+        -int copies
+        +Publication()
+        +Publication(String title, double price, int copies)
+        +getPrice() double
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +toString() String
+        +equals(Object o) boolean
+        +hashCode() int
+    }
+
+    class Book {
+        -String author
+        +Book()
+        +Book(String author)
+        +Book(String author, String title, double price, int copies)
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +sellItem()
+        +toString() String
+        +equals(Object o) boolean
+        +hashCode() int
+    }
+
+    class Magazine {
+        -int orderQty
+        -Date currentIssue
+        +Magazine()
+        +Magazine(int orderQty, Date currentIssue, String title, double price, int copies)
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +sellItem()
+        +toString() String
+    }
+
+    class DiscMag {
+        -boolean hasDisc
+        +DiscMag()
+        +DiscMag(boolean hasDisc, int orderQty, Date currentIssue, String title, double price, int copies)
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +sellItem()
+        +toString() String
+    }
+
+    class CashTill {
+        -double runningTotal
+        +CashTill()
+        +showTotal()
+        +sellItem(SaleableItem item)
+        +getRunningTotal() double
+    }
+```
+
+--- FILE: documentation/uml1.mmd ---
+```
+classDiagram
+%% --- LAYER 1: Base Class ---
+    class Vehicle {
+        <<Abstract>>
+        +String manufacturer
+        +int year
+        +start()
+        +stop()
+    }
+
+%% --- LAYER 2: Categories ---
+    class LandVehicle {
+        +int numWheels
+        +String transmissionType
+        +drive()
+    }
+
+    class WaterCraft {
+        +float displacement
+        +bool isMotorized
+        +float()
+    }
+
+    class Aircraft {
+        +int maxAltitude
+        +int numEngines
+        +fly()
+    }
+
+%% --- LAYER 3: Specific Types ---
+    class Car {
+        +int numDoors
+        +bool isConvertible
+        +openTrunk()
+    }
+
+    class Motorcycle {
+        +bool hasSidecar
+        +popWheelie()
+    }
+
+    class Yacht {
+        +int numCabins
+        +bool hasHelipad
+        +dropAnchor()
+    }
+
+    class JetPlane {
+        +float wingspan
+        +retractLandingGear()
+    }
+
+%% --- Relationships (Inheritance) ---
+%% Syntax: Parent <|-- Child
+
+    Vehicle <|-- LandVehicle
+    Vehicle <|-- WaterCraft
+    Vehicle <|-- Aircraft
+
+    LandVehicle <|-- Car
+    LandVehicle <|-- Motorcycle
+
+    WaterCraft <|-- Yacht
+
+    Aircraft <|-- JetPlane
+```
+
+--- FILE: documentation/uml2.mmd ---
+```
+classDiagram
+%% Base
+    class ElectronicDevice {
+        <<Abstract>>
+        -String serialNumber
+        -double price
+        +turnOn()
+    }
+
+%% Category
+    class Computer extends ElectronicDevice {
+-int ramSizeGB
+-String processor
+}
+
+%% Specific
+class Laptop extends Computer {
+-double batteryLifeHours
+}
+
+```
+
+--- FILE: HELP.md ---
+```
+# Getting Started
+
+### Reference Documentation
+
+For further reference, please consider the following sections:
+
+* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
+* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/4.0.6/maven-plugin)
+* [Create an OCI image](https://docs.spring.io/spring-boot/4.0.6/maven-plugin/build-image.html)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/4.0.6/reference/data/sql.html#data.sql.jpa-and-spring-data)
+* [Spring Web](https://docs.spring.io/spring-boot/4.0.6/reference/web/servlet.html)
+
+### Guides
+
+The following guides illustrate how to use some features concretely:
+
+* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
+* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
+* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
+* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
+
+### Maven Parent overrides
+
+Due to Maven's design, elements are inherited from the parent POM to the project POM.
+While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the
+parent.
+To prevent this, the project POM contains empty overrides for these elements.
+If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+
+
+```
+
+--- FILE: pom.xml ---
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.6</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>csd230</groupId>
+    <artifactId>csd230-lecture-2_9</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>csd230-s26-lecture-2.9-starter</name>
+    <description>csd230-s26-lecture-2.9-starter</description>
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+    <properties>
+        <java.version>25</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-h2console</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- ADD THESE -->
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- Thymeleaf Security Extras (for sec:authorize in HTML) -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+        </dependency>
+
+        <!-- Security Test (Optional but good practice) -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- JavaFaker for Seeding (Used in Lecture 2.9) -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+```
+
+--- FILE: src/main/java/app/Application.java ---
+```
+package app;
+
+import com.github.javafaker.Faker;
+import app.entities.*;
+import app.repositories.*;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
+
+@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CommandLineRunner demo(
+            BookRepository bookRepository,
+            UserRepository userRepository,
+            TicketEntityRepository ticketRepository) {
+        return (args) -> {
+            Faker faker = new Faker();
+
+            // 1. Seed Books
+            if (bookRepository.count() == 0) {
+                for (int i = 0; i < 5; i++) {
+                    bookRepository.save(new BookEntity(
+                            faker.book().author(),
+                            faker.book().title(),
+                            faker.number().randomDouble(2, 10, 50),
+                            faker.number().numberBetween(5, 20)
+                    ));
+                }
+                System.out.println(">> Seeded 5 Books");
+            }
+
+            // 2. Seed Tickets
+            if (ticketRepository.count() == 0) {
+                ticketRepository.save(new TicketEntity("Concert Ticket", 99.99));
+                ticketRepository.save(new TicketEntity("Movie Ticket", 12.50));
+                System.out.println(">> Seeded 2 Tickets");
+            }
+
+            // 3. Seed Default Users
+            if (userRepository.count() == 0) {
+                userRepository.save(new UserEntity("admin", passwordEncoder().encode("admin"), "ADMIN"));
+                userRepository.save(new UserEntity("user", passwordEncoder().encode("user"), "USER"));
+                System.out.println(">> Seeded Users: admin/admin, user/user");
+            }
+        };
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/api/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+            }
+        };
+    }
+}
+```
+
+--- FILE: src/main/java/app/config/WebSecurityConfig.java ---
+```
+package app.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class WebSecurityConfig {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**", "/login", "/css/**", "/js/**", "/error", "/").permitAll()
+                        .requestMatchers("/api/rest/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")              // The URL to trigger logout
+                        .logoutSuccessUrl("/login?logout") // Where to go after
+                        .permitAll()
+                )
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+                // CRITICAL FIX: Add /logout to the ignoring list
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/api/rest/**", "/logout"));
+
+        return http.build();
+    }
+
+}
+```
+
+--- FILE: src/main/java/app/controllers/LoginController.java ---
+```
+package app.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class LoginController {
+
+    @GetMapping("/login")
+    public String login() {
+        // This returns the name of the template: src/main/resources/templates/login.html
+        return "login";
+    }
+}
+```
+
+--- FILE: src/main/java/app/entities/BookEntity.java ---
+```
+package app.entities;
+
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+import java.util.Objects;
+
+@Entity
+@DiscriminatorValue("BOOK")
+public class BookEntity extends PublicationEntity {
+    private String author;
+
+    public BookEntity() {}
+
+    public BookEntity(String author, String title, Double price, Integer copies) { // Changed to Wrappers
+        this.author = author;
+        this.setTitle(title);
+        this.setPrice(price);
+        this.setCopies(copies);
+    }
+
+    // Getters and Setters
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
+
+    @Override
+    public void sellItem() {
+        System.out.println("Selling Book");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        BookEntity that = (BookEntity) o;
+        return Objects.equals(author, that.author);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), author);
+    }
+
+    @Override
+    public String toString() {
+        return "BookEntity{" +
+                "author='" + author + '\'' +
+                "} " + super.toString();
+    }
+}
+```
+
+--- FILE: src/main/java/app/entities/CartEntity.java ---
+```
+package app.entities;
+
+import jakarta.persistence.*;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "carts")
+public class CartEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // We use a Set to prevent duplicate products in the same cart
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "cart_products", // The Join Table name
+            joinColumns = @JoinColumn(name = "cart_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<ProductEntity> products = new LinkedHashSet<>();
+
+    /**
+     * Helper method to maintain the bi-directional relationship.
+     * This ensures that when a product is added to a cart,
+     * the product also knows which cart it belongs to.
+     */
+    public void addProduct(ProductEntity product) {
+        this.products.add(product);
+        product.getCarts().add(this);
+    }
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Set<ProductEntity> getProducts() { return products; }
+    public void setProducts(Set<ProductEntity> products) { this.products = products; }
+
+    @Override
+    public String toString() {
+        return "CartEntity{id=" + id + ", productCount=" + products.size() + "}";
+    }
+}
+
+
+```
+
+--- FILE: src/main/java/app/entities/DiscMagEntity.java ---
+```
+package app.entities;
+
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@Entity
+@DiscriminatorValue("DISCMAG")
+public class DiscMagEntity extends MagazineEntity {
+    private boolean hasDisc;
+
+    public DiscMagEntity() {
+        super();
+    }
+
+    public DiscMagEntity(boolean hasDisc, int orderQty, LocalDateTime currentIssue, String title, double price, int copies) {
+        super(orderQty, currentIssue, title, price, copies);
+        this.hasDisc = hasDisc;
+    }
+
+    // Getters and Setters
+    public boolean isHasDisc() { return hasDisc; }
+    public void setHasDisc(boolean hasDisc) { this.hasDisc = hasDisc; }
+
+    @Override
+    public void sellItem() {
+        System.out.println("Selling Disc Magazine: " + getTitle() + " (Has Disc: " + hasDisc + ")");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        DiscMagEntity that = (DiscMagEntity) o;
+        return hasDisc == that.hasDisc;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), hasDisc);
+    }
+
+    @Override
+    public String toString() {
+        return "DiscMagEntity{" +
+                "hasDisc=" + hasDisc +
+                "} " + super.toString();
+    }
+}
+```
+
+--- FILE: src/main/java/app/entities/MagazineEntity.java ---
+```
+package app.entities;
+
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@Entity
+@DiscriminatorValue("MAGAZINE")
+public class MagazineEntity extends PublicationEntity {
+    private int orderQty;
+    private LocalDateTime currentIssue;
+
+    public MagazineEntity() {
+        super();
+        this.currentIssue = LocalDateTime.now();
+    }
+
+    public MagazineEntity(int orderQty, LocalDateTime currentIssue, String title, double price, int copies) {
+        super(title, price, copies);
+        this.orderQty = orderQty;
+        this.currentIssue = currentIssue;
+    }
+
+    // Getters and Setters
+    public int getOrderQty() { return orderQty; }
+    public void setOrderQty(int orderQty) { this.orderQty = orderQty; }
+
+    public LocalDateTime getCurrentIssue() { return currentIssue; }
+    public void setCurrentIssue(LocalDateTime currentIssue) { this.currentIssue = currentIssue; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        MagazineEntity that = (MagazineEntity) o;
+        return orderQty == that.orderQty && Objects.equals(currentIssue, that.currentIssue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), orderQty, currentIssue);
+    }
+
+    @Override
+    public String toString() {
+        return "MagazineEntity{" +
+                "orderQty=" + orderQty +
+                ", currentIssue=" + currentIssue +
+                "} " + super.toString();
+    }
+
+    @Override
+    public void sellItem() {
+        System.out.println("Selling Magazine");
+
+    }
+}
+```
+
+--- FILE: src/main/java/app/entities/ProductEntity.java ---
+```
+package app.entities;
+
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
+@Entity
+@Table(name = "products")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class ProductEntity implements Serializable, SaleableItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // ... existing fields (id, productId) ...
+
+    @ManyToMany(mappedBy = "products")
+    private Set<CartEntity> carts = new java.util.HashSet<>();
+    private String productId;
+
+    public ProductEntity() {
+        setProductId(UUID.randomUUID().toString());
+    }
+
+    public Set<CartEntity> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(Set<CartEntity> carts) {
+        this.carts = carts;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // Getters and Setters
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductEntity that = (ProductEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(productId, that.productId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productId);
+    }
+
+    @Override
+    public String toString() {
+        return "ProductEntity{" +
+                "id=" + id +
+                ", productId='" + productId + '\'' +
+                '}';
+    }
+
+    // This allows Thymeleaf to access "${product.productType}"
+    // It returns the name of the Java class (e.g., "BookEntity")
+    public String getProductType() {
+        return this.getClass().getSimpleName();
+    }
+
+
+}
+```
+
+--- FILE: src/main/java/app/entities/PublicationEntity.java ---
+```
+package app.entities;
+
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+import java.util.Objects;
+
+@Entity
+@DiscriminatorValue("PUBLICATION")
+public abstract class PublicationEntity extends ProductEntity {
+    private String title;
+    private Double price;  // Changed to Double
+    private Integer copies; // Changed to Integer
+
+    public PublicationEntity() {
+    }
+
+    public PublicationEntity(String title, Double price, Integer copies) {
+        this.title = title;
+        this.price = price;
+        this.copies = copies;
+    }
+
+    @Override
+    public String toString() {
+        return "PublicationEntity{" +
+                "title='" + title + '\'' +
+                ", price=" + price +
+                ", copies=" + copies +
+                "} " + super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PublicationEntity that = (PublicationEntity) o;
+        return Objects.equals(title, that.title) && Objects.equals(price, that.price) && Objects.equals(copies, that.copies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), title, price, copies);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getCopies() {
+        return copies;
+    }
+
+    public void setCopies(Integer copies) {
+        this.copies = copies;
+    }
+
+}
+```
+
+--- FILE: src/main/java/app/entities/SaleableItem.java ---
+```
+package app.entities;
+
+public interface SaleableItem {
+    void sellItem();
+    Double getPrice();
+}
+
+```
+
+--- FILE: src/main/java/app/entities/TicketEntity.java ---
+```
+package app.entities;
+
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+import java.util.Objects;
+
+@Entity
+@DiscriminatorValue("TICKET")
+public class TicketEntity extends ProductEntity {
+    private String description;
+    private Double price; // Changed to Double
+
+
+    public TicketEntity() {}
+
+    public TicketEntity(String description, Double price) {
+        this.description = description;
+        this.price = price;
+    }
+
+    // Getters and Setters
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
+
+    @Override
+    public void sellItem() {
+        System.out.println("Selling Ticket: " + description);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        TicketEntity that = (TicketEntity) o;
+        return Objects.equals(description, that.description) && Objects.equals(price, that.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), description, price);
+    }
+
+    @Override
+    public String toString() {
+        return "TicketEntity{" +
+                "description='" + description + '\'' +
+                ", price=" + price +
+                "} " + super.toString();
+    }
+}
+```
+
+--- FILE: src/main/java/app/entities/UserEntity.java ---
+```
+package app.entities;
+import jakarta.persistence.*;
+@Entity
+@Table(name = "users")
+public class UserEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true, nullable = false)
+    private String username;
+    @Column(nullable = false)
+    private String password;
+    private String role; // e.g., "ADMIN", "USER"
+    // Constructors
+    public UserEntity() {}
+    public UserEntity(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+}
+
+
+```
+
+--- FILE: src/main/java/app/repositories/BookRepository.java ---
+```
+package app.repositories;
+import app.entities.BookEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface BookRepository extends JpaRepository<BookEntity, Long> {}
+
+```
+
+--- FILE: src/main/java/app/repositories/CartEntityRepository.java ---
+```
+package app.repositories;
+
+import app.entities.CartEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CartEntityRepository extends JpaRepository<CartEntity, Long> {
+}
+```
+
+--- FILE: src/main/java/app/repositories/DiscMagEntityRepository.java ---
+```
+package app.repositories;
+
+import app.entities.DiscMagEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DiscMagEntityRepository extends JpaRepository<DiscMagEntity, Long> {
+}
+```
+
+--- FILE: src/main/java/app/repositories/MagazineEntityRepository.java ---
+```
+package app.repositories;
+
+import app.entities.MagazineEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MagazineEntityRepository extends JpaRepository<MagazineEntity, Long> {
+}
+```
+
+--- FILE: src/main/java/app/repositories/ProductEntityRepository.java ---
+```
+package app.repositories;
+
+import app.entities.ProductEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductEntityRepository extends JpaRepository<ProductEntity, Long> {
+}
+```
+
+--- FILE: src/main/java/app/repositories/PublicationEntityRepository.java ---
+```
+package app.repositories;
+
+import app.entities.PublicationEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PublicationEntityRepository extends JpaRepository<PublicationEntity, Long> {
+}
+```
+
+--- FILE: src/main/java/app/repositories/TicketEntityRepository.java ---
+```
+package app.repositories;
+
+import app.entities.TicketEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TicketEntityRepository extends JpaRepository<TicketEntity, Long> {
+}
+```
+
+--- FILE: src/main/java/app/repositories/UserRepository.java ---
+```
+package app.repositories;
+
+import app.entities.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    UserEntity findByUsername(String username);
+}
+```
+
+--- FILE: src/main/java/app/services/CustomUserDetailsService.java ---
+```
+package app.services;
+import app.entities.UserEntity;
+import app.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+    @Autowired
+    private UserRepository userRepository;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        // Convert our UserEntity to Spring Security's UserDetails
+        return User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .roles(user.getRole())
+                .build();
+    }
+}
+
+
+```
+
+--- FILE: src/main/resources/application-h2.properties ---
+```
+# Database Connection
+spring.datasource.url=jdbc:h2:mem:csd230
+spring.datasource.driverClassName=org.h2.Driver
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create-drop
+
+# H2 Console Settings
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+spring.h2.console.settings.web-allow-others=true
+
+# Fix for the "Refused to display in a frame" error
+# Use this specific naming for Spring Boot 3.x/4.x
+spring.h2.console.settings.click-through-protection=false
+```
+
+--- FILE: src/main/resources/application-mysql.properties ---
+```
+# Change this line:
+spring.datasource.url=jdbc:mysql://localhost:3307/csd230?createDatabaseIfNotExist=true
+
+spring.datasource.username=root
+spring.datasource.password=itstudies12345
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# Keep these as they are:
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+```
+
+--- FILE: src/main/resources/application.properties ---
+```
+spring.application.name=csd230-s26-lecture-2.9-starter
+server.port=8080
+
+# Default to MySql if no profile is selected
+# see appli cation-mysql.properties
+#spring.profiles.active=h2
+#spring.profiles.active=mysql
+# Switch between "dev" (H2) and "mysql" (Docker) here:
+spring.profiles.active=h2
+
+
+
+```
+
+--- FILE: src/main/resources/static/index.html ---
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSD230 Lecture 2.9 Starter</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; line-height: 1.6; color: #333; }
+        .nav { margin-bottom: 30px; padding: 15px; background: #e9ecef; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 500px; }
+        code { background: #eee; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #d63384; }
+        button { cursor: pointer; padding: 8px 20px; background-color: #dc3545; color: white; border: none; border-radius: 4px; font-weight: bold; }
+        button:hover { background-color: #bb2d3b; }
+        h2 { color: #0d6efd; border-bottom: 2px solid #0d6efd; padding-bottom: 5px; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 10px; }
+        a { text-decoration: none; color: #0d6efd; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="nav">
+    <span><strong>CSD230:</strong> Advanced Web Applications</span>
+    <form action="/logout" method="post" style="display: inline;">
+        <button type="submit">Sign Out</button>
+    </form>
+</div>
+
+<h1>Lecture 2.9: REST API Backend</h1>
+<p>The server is running. Use the links below to explore the API and Database.</p>
+
+<div class="card">
+    <h2>Developer Tools</h2>
+    <ul>
+        <li>🚀 <a href="/swagger-ui/index.html">Interactive API Documentation (Swagger)</a></li>
+        <li>Storage <a href="/h2-console">H2 Database Console</a></li>
+    </ul>
+
+    <hr>
+
+    <h3>H2 Console Credentials</h3>
+    <p>Use these settings to log in when the <code>h2</code> profile is active:</p>
+    <ul>
+        <li><strong>Driver Class:</strong> <code>org.h2.Driver</code></li>
+        <li><strong>JDBC URL:</strong> <code>jdbc:h2:mem:csd230</code></li>
+        <li><strong>User Name:</strong> <code>sa</code></li>
+        <li><strong>Password:</strong> (leave blank)</li>
+    </ul>
+</div>
+
+</body>
+</html>
+```
+
+--- FILE: src/main/resources/templates/login.html ---
+```
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In - CSD230</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8f9fa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { color: #0d6efd; margin-top: 0; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #0d6efd; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #0b5ed7; }
+        .error { color: #dc3545; text-align: center; margin-bottom: 15px; font-size: 0.9em; }
+        .info-box { margin-top: 25px; padding: 15px; background-color: #e9ecef; border-radius: 5px; font-size: 0.85em; }
+        .info-box h4 { margin: 0 0 10px 0; color: #495057; border-bottom: 1px solid #dee2e6; }
+        code { background: #fff; padding: 2px 4px; border-radius: 3px; color: #d63384; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>Lecture 2.9 Login</h2>
+
+    <!-- Error Message -->
+    <div th:if="${param.error}" class="error">
+        Invalid username or password.
+    </div>
+
+    <!-- Login Form -->
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="e.g. admin" required autofocus>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="e.g. admin" required>
+        </div>
+        <button type="submit">Sign In</button>
+    </form>
+
+    <!-- Credential Cheat Sheet -->
+    <div class="info-box">
+        <h4>🔑 Default App Credentials</h4>
+        <p>User: <code>admin</code> / Pass: <code>admin</code></p>
+        <p>User: <code>user</code> / Pass: <code>user</code></p>
+
+        <h4>Storage H2 Console Settings</h4>
+        <p>JDBC URL: <code>jdbc:h2:mem:csd230</code></p>
+        <p>User: <code>sa</code> / Pass: (blank)</p>
+    </div>
+</div>
+
+</body>
+</html>
+```
+
+--- FILE: src/test/java/app/ApplicationTests.java ---
+```
+package app;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
+
+```
+

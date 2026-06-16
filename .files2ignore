@@ -1,0 +1,72 @@
+# .files2ignore GenericPromptGeneratorV4
+ai_prompt*
+Timeline*.json
+assets/
+volumes/
+
+# --- IDEs ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.settings/
+.metadata/
+.classpath
+.project
+.factorypath
+.springBeans
+nbproject/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+.vscode/
+
+# --- Build & Runtime ---
+target/
+.mvn/
+mvnw
+mvnw.cmd
+.gradle/
+build/
+gradlew
+gradlew.bat
+gradle/wrapper/
+node_modules/
+
+# --- Databases / Volumes (Common permission issues) ---
+postgres-data/
+mysql-data/
+data/db/
+
+# --- Flutter / Dart ---
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+ios/Pods/
+android/.gradle/
+*.g.dart
+*.freezed.dart
+
+# --- OS & Misc ---
+.git/
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+
+# --- Binaries & Archives ---
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+*.exe
+*.dll
+*.so
+*.dylib

@@ -1,0 +1,65 @@
+classDiagram
+%% --- LAYER 1: Base Class ---
+    class Vehicle {
+        <<Abstract>>
+        +String manufacturer
+        +int year
+        +start()
+        +stop()
+    }
+
+%% --- LAYER 2: Categories ---
+    class LandVehicle {
+        +int numWheels
+        +String transmissionType
+        +drive()
+    }
+
+    class WaterCraft {
+        +float displacement
+        +bool isMotorized
+        +float()
+    }
+
+    class Aircraft {
+        +int maxAltitude
+        +int numEngines
+        +fly()
+    }
+
+%% --- LAYER 3: Specific Types ---
+    class Car {
+        +int numDoors
+        +bool isConvertible
+        +openTrunk()
+    }
+
+    class Motorcycle {
+        +bool hasSidecar
+        +popWheelie()
+    }
+
+    class Yacht {
+        +int numCabins
+        +bool hasHelipad
+        +dropAnchor()
+    }
+
+    class JetPlane {
+        +float wingspan
+        +retractLandingGear()
+    }
+
+%% --- Relationships (Inheritance) ---
+%% Syntax: Parent <|-- Child
+
+    Vehicle <|-- LandVehicle
+    Vehicle <|-- WaterCraft
+    Vehicle <|-- Aircraft
+
+    LandVehicle <|-- Car
+    LandVehicle <|-- Motorcycle
+
+    WaterCraft <|-- Yacht
+
+    Aircraft <|-- JetPlane

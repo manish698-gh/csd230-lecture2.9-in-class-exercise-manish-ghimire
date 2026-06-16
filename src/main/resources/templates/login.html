@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In - CSD230</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8f9fa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { color: #0d6efd; margin-top: 0; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #0d6efd; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #0b5ed7; }
+        .error { color: #dc3545; text-align: center; margin-bottom: 15px; font-size: 0.9em; }
+        .info-box { margin-top: 25px; padding: 15px; background-color: #e9ecef; border-radius: 5px; font-size: 0.85em; }
+        .info-box h4 { margin: 0 0 10px 0; color: #495057; border-bottom: 1px solid #dee2e6; }
+        code { background: #fff; padding: 2px 4px; border-radius: 3px; color: #d63384; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>Lecture 2.9 Login</h2>
+
+    <!-- Error Message -->
+    <div th:if="${param.error}" class="error">
+        Invalid username or password.
+    </div>
+
+    <!-- Login Form -->
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="e.g. admin" required autofocus>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="e.g. admin" required>
+        </div>
+        <button type="submit">Sign In</button>
+    </form>
+
+    <!-- Credential Cheat Sheet -->
+    <div class="info-box">
+        <h4>🔑 Default App Credentials</h4>
+        <p>User: <code>admin</code> / Pass: <code>admin</code></p>
+        <p>User: <code>user</code> / Pass: <code>user</code></p>
+
+        <h4>Storage H2 Console Settings</h4>
+        <p>JDBC URL: <code>jdbc:h2:mem:csd230</code></p>
+        <p>User: <code>sa</code> / Pass: (blank)</p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+classDiagram
+    SaleableItem <|.. Editable
+    Serializable <|.. Editable
+    Editable <|-- Product
+    Product <|-- Ticket
+    Product <|-- Publication
+    Publication <|-- Book
+    Publication <|-- Magazine
+    Magazine <|-- DiscMag
+
+    Product <-- CashTill
+
+    class SaleableItem {
+        <<interface>>
+        +sellItem()
+        +getPrice() double
+    }
+
+    class Serializable {
+        <<interface>>
+    }
+
+    class Editable {
+        <<abstract>>
+        +edit(Scanner input)*
+        +initialize(Scanner input)*
+        +getInput(Scanner input, String defaultValue) String
+        +getInput(Scanner input, int defaultValue) int
+        +getInput(Scanner input, double defaultValue) double
+        +getInput(Scanner input, boolean defaultValue) boolean
+        +getInput(Scanner input, Date defaultValue) Date
+    }
+
+    class Product {
+        <<abstract>>
+        -String productId
+        +getProductId() String
+        +setProductId(String productId)
+    }
+
+    class Ticket {
+        +String description
+        +double price
+        +sellItem()
+        +getPrice() double
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +toString() String
+    }
+
+    class Publication {
+        <<Abstract>>
+        -String title
+        -double price
+        -int copies
+        +Publication()
+        +Publication(String title, double price, int copies)
+        +getPrice() double
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +toString() String
+        +equals(Object o) boolean
+        +hashCode() int
+    }
+
+    class Book {
+        -String author
+        +Book()
+        +Book(String author)
+        +Book(String author, String title, double price, int copies)
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +sellItem()
+        +toString() String
+        +equals(Object o) boolean
+        +hashCode() int
+    }
+
+    class Magazine {
+        -int orderQty
+        -Date currentIssue
+        +Magazine()
+        +Magazine(int orderQty, Date currentIssue, String title, double price, int copies)
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +sellItem()
+        +toString() String
+    }
+
+    class DiscMag {
+        -boolean hasDisc
+        +DiscMag()
+        +DiscMag(boolean hasDisc, int orderQty, Date currentIssue, String title, double price, int copies)
+        +initialize(Scanner input)
+        +edit(Scanner input)
+        +sellItem()
+        +toString() String
+    }
+
+    class CashTill {
+        -double runningTotal
+        +CashTill()
+        +showTotal()
+        +sellItem(SaleableItem item)
+        +getRunningTotal() double
+    }

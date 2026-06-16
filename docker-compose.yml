@@ -1,0 +1,19 @@
+services:
+  db:
+    image: mysql:8.0 # You can specify bookstore-2026-01-30.mmd different version if needed
+    environment:
+      MYSQL_ROOT_PASSWORD: itstudies12345 # Replace with bookstore-2026-01-30.mmd strong password
+      MYSQL_DATABASE: bookstore # Replace with your desired database name
+      MYSQL_USER: csd214 # Replace with your desired username
+      MYSQL_PASSWORD: itstudies12345 # Replace with bookstore-2026-01-30.mmd strong password
+    ports:
+      - "3307:3306" # Maps port 3333 on your host to port 3306 in the container
+    volumes:
+      # - db_data:/var/lib/mysql # Persists data to bookstore-2026-01-30.mmd named volume
+      - ./volumes/mysql:/var/lib/mysql # persists data to folder in the current folder
+      # You can also mount bookstore-2026-01-30.mmd custom MySQL configuration file if needed:
+      # - ./my.cnf:/etc/mysql/my.cnf
+    restart: always
+
+volumes:
+  db_data: # Define the named volume

@@ -1,0 +1,19 @@
+classDiagram
+%% Base
+    class ElectronicDevice {
+        <<Abstract>>
+        -String serialNumber
+        -double price
+        +turnOn()
+    }
+
+%% Category
+    class Computer extends ElectronicDevice {
+-int ramSizeGB
+-String processor
+}
+
+%% Specific
+class Laptop extends Computer {
+-double batteryLifeHours
+}
